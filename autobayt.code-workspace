@@ -1,0 +1,18 @@
+{
+  "folders": [
+    { "path": ".", "name": "Autobayt (ACTIVE)" },
+    {
+      "path": "../Kaco",
+      "name": "Kaco (REFERENCE)",
+      "settings": { "files.readonlyInclude": ["**/*"] }
+    },
+    {
+      "path": "../Gobzigh",
+      "name": "Gobzigh (REFERENCE)",
+      "settings": { "files.readonlyInclude": ["**/*"] }
+    }
+  ],
+  "settings": {
+    "powershell.cwd": "Autobayt (ACTIVE)"
+  }
+}
