@@ -1,0 +1,14 @@
+{
+  "domain": "autobayt",
+  "name": "Autobayt",
+  "codeowners": ["@RASBR"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/RASBR/home-assistant-autobayt",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/RASBR/home-assistant-autobayt/issues",
+  "requirements": ["aiohttp"],
+  "version": "1.0.0",
+  "integration_type": "hub",
+  "loggers": ["custom_components.autobayt"]
+}

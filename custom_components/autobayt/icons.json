@@ -1,0 +1,31 @@
+{
+  "entity": {
+    "sensor": {
+      "connection": {
+        "default": "mdi:wifi",
+        "state": {
+          "connected": "mdi:wifi",
+          "disconnected": "mdi:wifi-off"
+        }
+      },
+      "signal_strength": {
+        "default": "mdi:wifi-strength-2"
+      },
+      "firmware": {
+        "default": "mdi:chip"
+      },
+      "update_status": {
+        "default": "mdi:update",
+        "state": {
+          "idle": "mdi:check-circle",
+          "updating": "mdi:download"
+        }
+      }
+    },
+    "switch": {
+      "button": {
+        "default": "mdi:light-switch"
+      }
+    }
+  }
+}

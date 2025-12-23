@@ -1,0 +1,35 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Autobayt",
+        "description": "Enter your Autobayt User ID to connect your devices.",
+        "data": {
+          "user_id": "User ID"
+        }
+      },
+      "discovery_confirm": {
+        "title": "Discovered Autobayt Device",
+        "description": "A new Autobayt device has been discovered:\n\n**Device Name:** {device_name}\n**Model:** {model_name}\n**Type:** {device_type}\n**Device ID:** {device_id}\n\nDo you want to add this device?"
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to Autobayt API. Please check your internet connection and try again.",
+      "invalid_user_id_length": "User ID must be exactly 24 characters long.",
+      "no_devices_found": "No devices found for this User ID. Please verify your User ID is correct.",
+      "unknown": "An unexpected error occurred. Please try again."
+    },
+    "abort": {
+      "already_configured": "This device is already configured.",
+      "no_device_data": "No device data available for configuration."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Autobayt Options",
+        "description": "Configure options for your Autobayt integration."
+      }
+    }
+  }
+}
