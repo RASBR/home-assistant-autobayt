@@ -12,16 +12,19 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, SIGNAL_STRENGTH_DECIBELS_MILLIWATT
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
     ATTR_CONNECTION_STATUS,
     ATTR_FIRMWARE_VERSION,
+    ATTR_IS_HUB,
     ATTR_IS_UPDATING,
     ATTR_MODEL_NAME,
     ATTR_NEXT_FIRMWARE,
     ATTR_ROOM_NAME,
+    ATTR_SLAVE_ID,
     ATTR_SSTR,
     ATTR_BUTTONS,
     DOMAIN,
@@ -90,7 +93,7 @@ class AutobaytSensorEntity(CoordinatorEntity, SensorEntity):
         model_name = device_data.get(ATTR_MODEL_NAME, "Unknown")
         firmware_version = device_data.get(ATTR_FIRMWARE_VERSION, "Unknown")
         
-        return {
+        info = {
             "identifiers": {(DOMAIN, self._device_id)},
             "name": self._device_name,
             "manufacturer": "Autobayt",
@@ -98,6 +101,15 @@ class AutobaytSensorEntity(CoordinatorEntity, SensorEntity):
             "sw_version": firmware_version,
             "connections": {("mac", self._device_id)},
         }
+        
+        # Add via_device for slave devices connected to a hub
+        is_hub = device_data.get(ATTR_IS_HUB, False)
+        slave_id = device_data.get(ATTR_SLAVE_ID, "")
+        
+        if not is_hub and slave_id:
+            info["via_device"] = (DOMAIN, slave_id)
+        
+        return info
 
     @property
     def available(self) -> bool:
@@ -123,6 +135,7 @@ class AutobaytConnectionSensor(AutobaytSensorEntity):
         self._attr_name = f"{device_name} Connection"
         self._attr_device_class = SensorDeviceClass.ENUM
         self._attr_options = ["connected", "disconnected"]
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
     def native_value(self) -> str | None:
@@ -159,6 +172,7 @@ class AutobaytSignalStrengthSensor(AutobaytSensorEntity):
         self._attr_native_unit_of_measurement = SIGNAL_STRENGTH_DECIBELS_MILLIWATT
         self._attr_device_class = SensorDeviceClass.SIGNAL_STRENGTH
         self._attr_state_class = SensorStateClass.MEASUREMENT
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
     def native_value(self) -> int | None:
@@ -183,6 +197,7 @@ class AutobaytFirmwareSensor(AutobaytSensorEntity):
         """Initialize the sensor."""
         super().__init__(coordinator, device_id, device_name, "firmware")
         self._attr_name = f"{device_name} Firmware"
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
     def native_value(self) -> str | None:
@@ -220,6 +235,7 @@ class AutobaytUpdateStatusSensor(AutobaytSensorEntity):
         self._attr_name = f"{device_name} Update Status"
         self._attr_device_class = SensorDeviceClass.ENUM
         self._attr_options = ["idle", "updating"]
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
     def native_value(self) -> str | None:

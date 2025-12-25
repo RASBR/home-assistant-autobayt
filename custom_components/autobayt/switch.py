@@ -85,7 +85,7 @@ class AutobaytSwitchEntity(CoordinatorEntity, SwitchEntity):
         model_name = device_data.get("model_name", "Unknown")
         firmware_version = device_data.get("firmware_version", "Unknown")
         
-        return {
+        info = {
             "identifiers": {(DOMAIN, self._device_id)},
             "name": self._device_name,
             "manufacturer": "Autobayt",
@@ -93,6 +93,15 @@ class AutobaytSwitchEntity(CoordinatorEntity, SwitchEntity):
             "sw_version": firmware_version,
             "connections": {("mac", self._device_id)},
         }
+        
+        # Add via_device for slave devices connected to a hub
+        is_hub = device_data.get("is_hub", False)
+        slave_id = device_data.get("slave_id", "")
+        
+        if not is_hub and slave_id:
+            info["via_device"] = (DOMAIN, slave_id)
+        
+        return info
 
     @property
     def available(self) -> bool:

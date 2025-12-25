@@ -107,9 +107,12 @@ class AutobaytCoordinator(DataUpdateCoordinator):
             async with self._session.get(url, timeout=30) as response:
                 response.raise_for_status()
                 data = await response.json()
+                _LOGGER.debug("API response for device %s: %s", device_id, data)
                 # API returns a single device object
                 if isinstance(data, dict):
+                    _LOGGER.debug("Returning dict device data for %s", device_id)
                     return data
+                _LOGGER.warning("Unexpected data type for device %s: %s", device_id, type(data))
                 return None
         except aiohttp.ClientError as err:
             _LOGGER.error("Error fetching device details for %s: %s", device_id, err)
