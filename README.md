@@ -1,13 +1,15 @@
 <div align="center">
-  <img src="custom_components/autobayt/static/autobayt-logo.png" alt="Autobayt logo" width="250"/>
-  
+  <a href="https://autobayt.com/" target="_blank"><img src="custom_components/autobayt/static/logo.png" alt="Autobayt logo" width="250"/></a>
+
+  [Official Website](https://autobayt.com/)
+
   # Autobayt Home Assistant Integration
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024.1+-blue.svg)](https://www.home-assistant.io/)
 
   **A comprehensive Home Assistant custom integration for Autobayt smart switches with automatic device discovery and seamless control.**
-
+  
  </div>
 
 ---
@@ -258,6 +260,7 @@ logger:
 ## 🆘 Support
 
 For issues, questions, or feature requests:
+- **Official Website**: [autobayt.com](https://autobayt.com/)
 - **GitHub Issues**: [Create an Issue](https://github.com/RASBR/home-assistant-autobayt/issues)
 - **Repository**: [home-assistant-autobayt](https://github.com/RASBR/home-assistant-autobayt)
 
