@@ -141,3 +141,9 @@ zz-response-user.json
 zzz-for-browser-test.md
 zzzz-autobayt_arc_device_trigger.md
 zzzz-notes-for-hussam.md
+
+# Markdown files and all-md-files folder
+all-md-files/
+*.md
+!README.md
+!custom_components/**/*.md
