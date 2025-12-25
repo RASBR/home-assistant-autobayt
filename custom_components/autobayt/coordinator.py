@@ -51,24 +51,23 @@ class AutobaytCoordinator(DataUpdateCoordinator):
         try:
             device_data = {}
             
+            # For device-specific coordinator, fetch device details using Device GET API
             if self.device_id:
-                detail_data = await self._fetch_device_detail(self.device_id)
-                if detail_data:
-                    device_data[self.device_id] = detail_data[0]
+                device = await self._fetch_device_details(self.device_id)
+                if device:
+                    device_data[self.device_id] = device
                 return {"device_data": device_data}
             
+            # For main coordinator with user_id
             if self.user_id:
                 user_devices = await self._fetch_user_devices()
                 
-                for device_id in self._added_devices:
-                    try:
-                        detail_data = await self._fetch_device_detail(device_id)
-                        if detail_data:
-                            device_data[device_id] = detail_data[0]
-                    except Exception as err:
-                        _LOGGER.warning(
-                            "Failed to fetch device %s data: %s", device_id, err
-                        )
+                # Fetch detailed data for each added device using Device GET API
+                if user_devices:
+                    for device_id in self._added_devices:
+                        device = await self._fetch_device_details(device_id)
+                        if device:
+                            device_data[device_id] = device
                 
                 return {
                     "user_devices": user_devices,
@@ -85,7 +84,11 @@ class AutobaytCoordinator(DataUpdateCoordinator):
         if not self.user_id:
             return []
             
-        url = f"{USER_DEVICE_LIST_URL}{self.user_id}"
+        return await self._fetch_user_devices_by_id(self.user_id)
+
+    async def _fetch_user_devices_by_id(self, user_id: str) -> List[Dict[str, Any]]:
+        """Fetch all devices for a specific user_id."""
+        url = f"{USER_DEVICE_LIST_URL}{user_id}"
         
         try:
             async with self._session.get(url, timeout=30) as response:
@@ -96,17 +99,20 @@ class AutobaytCoordinator(DataUpdateCoordinator):
             _LOGGER.error("Error fetching user devices: %s", err)
             return []
 
-    async def _fetch_device_detail(self, device_id: str) -> List[Dict[str, Any]] | None:
-        """Fetch detailed data for a specific device."""
+    async def _fetch_device_details(self, device_id: str) -> Dict[str, Any] | None:
+        """Fetch detailed information for a specific device."""
         url = f"{DEVICE_DETAIL_URL}{device_id}"
         
         try:
             async with self._session.get(url, timeout=30) as response:
                 response.raise_for_status()
                 data = await response.json()
-                return data if isinstance(data, list) else []
+                # API returns a single device object
+                if isinstance(data, dict):
+                    return data
+                return None
         except aiohttp.ClientError as err:
-            _LOGGER.error("Error fetching device %s detail: %s", device_id, err)
+            _LOGGER.error("Error fetching device details for %s: %s", device_id, err)
             return None
 
     async def async_start_discovery(self) -> None:

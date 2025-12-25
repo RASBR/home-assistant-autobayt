@@ -12,9 +12,9 @@
 
 Add the below to get related information:
 * **User Devices:** `?user_id=` *user_id* - *Phase 1*
-* **Device:** `?device_id=` *device_id* - *Phase 1*
-* **User Devices:** `?loc_id=` *loc_id* - *Phase 3*
-* **Room:** `?room_id=` *room_id* - *Phase 3*
+* **Device:** `?device_id=` *device_id* - *Phase 2*
+* **User Devices:** `?loc_id=` *loc_id* - *Phase 2*
+* **Room:** `?room_id=` *room_id* - *Phase 2*
 
 ## POST
 

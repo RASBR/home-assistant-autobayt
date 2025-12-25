@@ -300,7 +300,7 @@
 
 ## Device GET method
 
-**URL:** https://api.autobayt.com/v1/device/get-things?device_id=341876rt9sm3
+**URL:** https://api.autobayt.com/v1/device?device_id=341876rt9sm3
 
 **Response**
 ```json

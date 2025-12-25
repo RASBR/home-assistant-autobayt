@@ -10,5 +10,7 @@
   "requirements": ["aiohttp"],
   "version": "1.0.0",
   "integration_type": "hub",
-  "loggers": ["custom_components.autobayt"]
+  "loggers": ["custom_components.autobayt"],
+  "icon": "static/icon.png",
+  "logo": "static/logo.png"
 }

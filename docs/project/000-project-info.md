@@ -26,7 +26,7 @@ Project starts at Phase 1, following phases fix bugs and may introduce feature
 - Extensible: additional sensors/
 
 ## Technology Stack
-- **Backend**: Django (Python 3.12+)
+- **Backend**: Python 3.12+
 - **Database**: Handled by Home Assistant.
 - **Frontend**: Handled by Home Assistant.
 - **Setup/Deployment**: Manual *Phase 1* and via **HACS** *Phase 3*.

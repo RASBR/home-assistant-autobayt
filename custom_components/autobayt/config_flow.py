@@ -75,6 +75,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Handle discovery of a new device."""
         device_id = discovery_info["device_id"]
         device_data = discovery_info["device_data"]
+        user_id = discovery_info.get("user_id")
         
         await self.async_set_unique_id(device_id)
         self._abort_if_unique_id_configured()
@@ -82,9 +83,14 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._discovered_device = device_data
         
         model_name = device_data.get("model_name", "")
-        device_type_info = self._get_device_type_info(model_name)
-        
         device_name = device_data.get("name", f"Autobayt {model_name}")
+        
+        # Set context for discovery UI and store user_id
+        self.context["title_placeholders"] = {
+            "name": device_name,
+            "model": model_name,
+        }
+        self.context["user_id"] = user_id
         
         return await self.async_step_discovery_confirm()
 
@@ -97,11 +103,15 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             device_id = device_data["device_id"]
             device_name = device_data.get("name", f"Autobayt {device_data.get('model_name', '')}")
             
+            # Get user_id from discovery_info context
+            user_id = self.context.get("user_id")
+            
             return self.async_create_entry(
                 title=device_name,
                 data={
                     "device_id": device_id,
                     "device_data": device_data,
+                    "user_id": user_id,  # Pass user_id to device entry
                 },
             )
 
@@ -112,16 +122,25 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         model_name = device_data.get("model_name", "")
         device_type_info = self._get_device_type_info(model_name)
         device_name = device_data.get("name", f"Autobayt {model_name}")
+        firmware_version = device_data.get("firmware_version", "Unknown")
         
         device_type_name = "Unknown"
+        button_count = 1
         if device_type_info:
             device_type_name = device_type_info.get("type_info", {}).get("device_type_name", "Unknown")
+            button_count = device_type_info.get("type_info", {}).get("buttons", 1)
+        
+        # Get connection status
+        connection_status = "Online" if device_data.get("connection_status", False) else "Offline"
         
         placeholders = {
             "device_name": device_name,
             "model_name": model_name,
             "device_type": device_type_name,
             "device_id": device_data.get("device_id", ""),
+            "firmware_version": firmware_version,
+            "button_count": str(button_count),
+            "connection_status": connection_status,
         }
 
         return self.async_show_form(

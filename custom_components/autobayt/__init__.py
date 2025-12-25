@@ -10,7 +10,6 @@ from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN, CONF_USER_ID
 from .coordinator import AutobaytCoordinator
-from .http import async_setup_http_views
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,9 +22,6 @@ PLATFORMS: list[Platform] = [
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Autobayt from a config entry."""
     _LOGGER.debug("Setting up Autobayt integration")
-    
-    if CONF_USER_ID in entry.data:
-        await async_setup_http_views(hass)
     
     coordinator = AutobaytCoordinator(hass, entry)
     

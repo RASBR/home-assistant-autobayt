@@ -1,5 +1,6 @@
 {
   "config": {
+    "flow_title": "{name}",
     "step": {
       "user": {
         "title": "Set up Autobayt",
@@ -10,7 +11,7 @@
       },
       "discovery_confirm": {
         "title": "Discovered Autobayt Device",
-        "description": "A new Autobayt device has been discovered:\n\n**Device Name:** {device_name}\n**Model:** {model_name}\n**Type:** {device_type}\n**Device ID:** {device_id}\n\nDo you want to add this device?"
+        "description": "A new Autobayt device has been discovered:\n\n**Device Name:** {device_name}\n**Model:** {model_name}\n**Type:** {device_type}\n**Buttons:** {button_count}\n**Firmware:** {firmware_version}\n**Status:** {connection_status}\n**Device ID:** {device_id}\n\nDo you want to add this device?"
       }
     },
     "error": {

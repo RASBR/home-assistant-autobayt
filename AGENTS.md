@@ -55,6 +55,9 @@
 - [010-architecture.md](docs/project/010-architecture.md) → System architecture and main components.
 - [020-setup.md](docs/project/020-setup.md) → Installation, configuration, and local development setup.
 - [040-roadmap.md](docs/project/040-roadmap.md) → Planned features, priorities, and future directions.
-
+- [050-devices.md](docs/project/050-devices.md) → Device list and their availability status.
+- [051-api-response-mapping.md](docs/project/051-api-response-mapping.md) → API endpoint definitions and field descriptions.
+- [052-entities.md](docs/project/052-entities.md) → JSON field to entity mapping and categorization.
+- [080-icon-logo-setup.md](docs/project/080-icon-logo-setup.md) → Icon and logo configuration.
 
 ---

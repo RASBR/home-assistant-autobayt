@@ -5,7 +5,7 @@ DOMAIN: Final = "autobayt"
 
 # API Configuration
 USER_DEVICE_LIST_URL: Final = "https://api.autobayt.com/v1/user/get-things?user_id="
-DEVICE_DETAIL_URL: Final = "https://api.autobayt.com/v1/user/get-things?device_id="
+DEVICE_DETAIL_URL: Final = "https://api.autobayt.com/v1/device?device_id="
 DEVICE_TRIGGER_URL: Final = "https://api.autobayt.com/v1/device/trigger"
 
 # Device Types Configuration
