@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="custom_components/autobayt/brands/autobayt/autobayt-banner-3.png" alt="Autobayt Banner" width="250"/>
+  <img src="custom_components/autobayt/static/autobayt-logo.png" alt="Autobayt logo" width="250"/>
   
   # Autobayt Home Assistant Integration
 
@@ -8,8 +8,7 @@
 
   **A comprehensive Home Assistant custom integration for Autobayt smart switches with automatic device discovery and seamless control.**
 
-  <img src="custom_components/autobayt/brands/autobayt/icon.png" alt="Autobayt Icon" width="120"/>
-</div>
+ </div>
 
 ---
 
@@ -242,22 +241,6 @@ logger:
     custom_components.autobayt: debug
 ```
 
-## 🛠️ Development
-
-### API Endpoints
-- **Device List**: `https://api.autobayt.com/v1/user/get-things?user_id={user_id}`
-- **Device Detail**: `https://api.autobayt.com/v1/user/get-things?device_id={device_id}`
-- **Device Control**: `https://api.autobayt.com/v1/device/trigger`
-
-### API Request Format
-```json
-{
-  "btnStates": [true],
-  "btnIds": [0],
-  "device_id": "923748bc5xy1"
-}
-```
-
 ### Contributing
 1. Fork the repository
 2. Create a feature branch
@@ -271,10 +254,6 @@ logger:
 - Internet connection for device communication
 - Autobayt account with registered devices
 - Valid 24-character User ID
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
@@ -291,10 +270,14 @@ For issues, questions, or feature requests:
 - Firmware tracking
 
 ### Phase 3 (Future)
+- Power Monitoring Sensors
 - Account-level sensors
 - HACS distribution
 - Advanced features
 
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 ---
 
-**Made with ❤️ for the Home Assistant Community**
