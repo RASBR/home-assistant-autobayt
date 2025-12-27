@@ -38,16 +38,8 @@ async def async_setup_entry(
     
     entities: list[BinarySensorEntity] = []
     
-    if "device_id" in config_entry.data:
-        device_id = config_entry.data["device_id"]
-        device_data = config_entry.data.get("device_data", {})
-        device_name = device_data.get("name", "Autobayt Device")
-        
-        await coordinator.async_add_device(device_id)
-        
-        entities.append(
-            AutobaytFirmwareUpdateSensor(coordinator, device_id, device_name)
-        )
+    # Binary sensor entities can be added here in the future
+    # Firmware update is now handled by the update platform
     
     async_add_entities(entities)
 

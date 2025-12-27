@@ -8,7 +8,7 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/RASBR/home-assistant-autobayt/issues",
   "requirements": ["aiohttp", "packaging"],
-  "version": "0.1.1",
+  "version": "0.1.2",
   "integration_type": "hub",
   "loggers": ["custom_components.autobayt"],
   "icon": "static/icon.png",

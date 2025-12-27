@@ -22,7 +22,8 @@
     },
     "abort": {
       "already_configured": "This device is already configured.",
-      "no_device_data": "No device data available for configuration."
+      "no_device_data": "No device data available for configuration.",
+      "device_deleted": "This device no longer exists. It may have been deleted from your Autobayt account."
     }
   },
   "options": {

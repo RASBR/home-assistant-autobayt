@@ -13,6 +13,7 @@ from homeassistant.helpers import config_validation as cv
 
 from .const import (
     CONF_USER_ID,
+    DEVICE_DETAIL_URL,
     DEVICE_TYPES,
     DOMAIN,
     USER_DEVICE_LIST_URL,
@@ -118,6 +119,22 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if not self._discovered_device:
             return self.async_abort(reason="no_device_data")
 
+        # Fetch latest device info from API
+        device_id = self._discovered_device.get("device_id")
+        if device_id:
+            latest_device_data, device_exists = await self._async_get_device_info(device_id)
+            if device_exists and latest_device_data:
+                # Update stored device data with latest info
+                self._discovered_device = latest_device_data
+                _LOGGER.info("Fetched latest device info for %s", device_id)
+            elif not device_exists:
+                # Device was deleted, abort the flow
+                _LOGGER.warning("Device %s no longer exists, aborting", device_id)
+                return self.async_abort(reason="device_deleted")
+            else:
+                # Network error or other issue, use discovery data as fallback
+                _LOGGER.warning("Could not fetch latest device info for %s, using discovery data", device_id)
+
         device_data = self._discovered_device
         model_name = device_data.get("model_name", "")
         device_type_info = self._get_device_type_info(model_name)
@@ -173,6 +190,40 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         except Exception as err:
             _LOGGER.error("Unexpected error: %s", err)
             return None
+
+    async def _async_get_device_info(self, device_id: str) -> tuple[Dict[str, Any] | None, bool]:
+        """Get latest device information from API.
+        
+        Returns:
+            Tuple of (device_data, device_exists)
+            - device_data: Device information dict or None
+            - device_exists: False if device was deleted (404), True otherwise
+        """
+        url = f"{DEVICE_DETAIL_URL}{device_id}"
+        
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, timeout=30) as response:
+                    if response.status == 404:
+                        # Device not found - was deleted
+                        _LOGGER.info("Device %s not found (404)", device_id)
+                        return None, False
+                    
+                    response.raise_for_status()
+                    data = await response.json()
+                    
+                    # Check if response is empty or null (device deleted)
+                    if not data or (isinstance(data, dict) and not data):
+                        _LOGGER.info("Device %s returned empty data", device_id)
+                        return None, False
+                    
+                    return (data if isinstance(data, dict) else None), True
+        except aiohttp.ClientError as err:
+            _LOGGER.error("Error fetching device info for %s: %s", device_id, err)
+            return None, True  # Network error, device may still exist
+        except Exception as err:
+            _LOGGER.error("Unexpected error fetching device info: %s", err)
+            return None, True  # Unknown error, device may still exist
 
     def _get_device_type_info(self, model_name: str) -> Dict[str, Any] | None:
         """Get device type information from model name."""

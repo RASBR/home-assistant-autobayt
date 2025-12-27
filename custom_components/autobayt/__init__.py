@@ -17,6 +17,7 @@ PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,
     Platform.SENSOR,
     Platform.SWITCH,
+    Platform.UPDATE,
 ]
 
 
@@ -42,10 +43,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     _LOGGER.debug("Unloading Autobayt integration entry: %s", entry.entry_id)
-    
-    if CONF_USER_ID in entry.data:
-        _LOGGER.debug("Unloading main integration - cleaning up all devices")
-        await _async_cleanup_integration_devices(hass, entry)
     
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         coordinator = hass.data[DOMAIN].pop(entry.entry_id)
