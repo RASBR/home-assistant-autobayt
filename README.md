@@ -1,3 +1,5 @@
+![](https://img.shields.io/badge/Project_stage-Work_in_progress-orange)
+
 <div align="center">
   <a href="https://autobayt.com/" target="_blank"><img src="custom_components/autobayt/static/logo.png" alt="Autobayt logo" width="250"/></a>
 
@@ -5,8 +7,14 @@
 
   # Autobayt Home Assistant Integration
 
+  [![Made with GitHub Copilot & Claude](https://img.shields.io/badge/Made%20with-Copilot%20%26%20Claude-7B68EE?logo=github&logoColor=white&style=flat)](https://github.com/features/copilot)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024.1+-blue.svg)](https://www.home-assistant.io/)
+  ![Version](https://img.shields.io/github/v/release/RASBR/home-assistant-autobayt)
+  ![Last Commit](https://img.shields.io/github/last-commit/RASBR/home-assistant-autobayt?date_format=dd-mmm-yyyy)
+  ![Stars](https://img.shields.io/github/stars/RASBR/home-assistant-autobayt)
+  ![Forks](https://img.shields.io/github/forks/RASBR/home-assistant-autobayt)
+  ![Issues](https://img.shields.io/github/issues/RASBR/home-assistant-autobayt)
 
   **A comprehensive Home Assistant custom integration for Autobayt smart switches with automatic device discovery and seamless control.**
   
