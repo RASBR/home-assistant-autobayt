@@ -3,14 +3,14 @@
   "name": "Autobayt",
   "codeowners": ["@RASBR"],
   "config_flow": true,
+  "icon": "static/icon.png",
+  "logo": "static/logo.png",
   "dependencies": [],
   "documentation": "https://github.com/RASBR/home-assistant-autobayt",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/RASBR/home-assistant-autobayt/issues",
   "requirements": ["aiohttp", "packaging"],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "integration_type": "hub",
-  "loggers": ["custom_components.autobayt"],
-  "icon": "static/icon.png",
-  "logo": "static/logo.png"
+  "loggers": ["custom_components.autobayt"]
 }
