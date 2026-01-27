@@ -25,20 +25,16 @@ async def async_setup_entry(
     coordinator: AutobaytCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     entities = []
-    device_data_dict = coordinator.data.get("device_data", {})
-    for device_id, device_data in device_data_dict.items():
-        # Skip invalid entries
-        if not device_id or not isinstance(device_data, dict):
-            _LOGGER.warning("Skipping invalid device entry: %s", device_id)
-            continue
-            
-        device_name = device_data.get("name")
-        if not device_name:
-            _LOGGER.warning("Skipping device with no name: %s", device_id)
-            continue
-            
+    
+    # Handle device-specific config entry
+    if "device_id" in config_entry.data:
+        device_id = config_entry.data["device_id"]
+        device_data = config_entry.data.get("device_data", {})
+        device_name = device_data.get("name", "Autobayt Device")
+        
+        await coordinator.async_add_device(device_id)
         entities.append(AutobaytUpdateEntity(coordinator, device_id, device_name))
-
+    
     async_add_entities(entities)
 
 
@@ -65,6 +61,20 @@ class AutobaytUpdateEntity(CoordinatorEntity, UpdateEntity):
         """Get device data from coordinator."""
         return self.coordinator.data.get("device_data", {}).get(self._device_id, {})
 
+    def _get_current_version_code(self) -> int | None:
+        """Get current firmware version code from device data."""
+        device_data = self._get_device_data()
+        next_firmware = device_data.get("next_firmware", [])
+        
+        # The API doesn't provide current version_code separately,
+        # so we extract it from next_firmware if version matches
+        if next_firmware and len(next_firmware) > 0:
+            firmware_info = next_firmware[0]
+            if firmware_info.get("version_name") == device_data.get("firmware_version"):
+                return firmware_info.get("version_code")
+        
+        return None
+
     @property
     def installed_version(self) -> str | None:
         """Return the current installed version."""
@@ -76,14 +86,28 @@ class AutobaytUpdateEntity(CoordinatorEntity, UpdateEntity):
         """Return the latest available version."""
         device_data = self._get_device_data()
         next_firmware = device_data.get("next_firmware", [])
+        current_version = self.installed_version
         
         if next_firmware and len(next_firmware) > 0:
-            latest = next_firmware[0].get("version_name")
-            # Only return if different from installed version
-            if latest and latest != self.installed_version:
-                return latest
+            firmware_info = next_firmware[0]
+            latest_version = firmware_info.get("version_name")
+            
+            # Check if versions are different by name
+            if latest_version and latest_version != current_version:
+                return latest_version
+            
+            # If version names are the same, check version_code
+            # This handles cases where firmware might have same version string but different build
+            if latest_version == current_version:
+                latest_code = firmware_info.get("version_code")
+                current_code = self._get_current_version_code()
+                
+                # If we have both codes and they're different, treat as update available
+                if latest_code is not None and current_code is not None and latest_code != current_code:
+                    # Return the version with code indicator to show it's different
+                    return f"{latest_version} (build {latest_code})"
         
-        return self.installed_version
+        return current_version
 
     @property
     def in_progress(self) -> bool | int:
@@ -133,13 +157,16 @@ class AutobaytUpdateEntity(CoordinatorEntity, UpdateEntity):
         device_data = self._get_device_data()
         next_firmware = device_data.get("next_firmware", [])
         
-        attrs = {}
+        attrs = {
+            "current_version": device_data.get("firmware_version"),
+        }
         
         if next_firmware and len(next_firmware) > 0:
             firmware_info = next_firmware[0]
             attrs.update({
+                "next_version": firmware_info.get("version_name"),
+                "next_version_code": firmware_info.get("version_code"),
                 "file_name": firmware_info.get("file_name"),
-                "version_code": firmware_info.get("version_code"),
                 "requires_client_update": firmware_info.get("require_client_update", False),
             })
         
