@@ -42,7 +42,6 @@ class AutobaytUpdateEntity(CoordinatorEntity, UpdateEntity):
     """Representation of an Autobayt device update entity."""
 
     _attr_has_entity_name = True
-    _attr_supported_features = UpdateEntityFeature.PROGRESS
 
     def __init__(
         self, coordinator: AutobaytCoordinator, device_id: str, device_name: str
@@ -92,21 +91,12 @@ class AutobaytUpdateEntity(CoordinatorEntity, UpdateEntity):
             firmware_info = next_firmware[0]
             latest_version = firmware_info.get("version_name")
             
-            # Check if versions are different by name
-            if latest_version and latest_version != current_version:
+            # Return the version from next_firmware - this is what's available
+            # HA will compare it to installed_version to determine if update is needed
+            if latest_version:
                 return latest_version
-            
-            # If version names are the same, check version_code
-            # This handles cases where firmware might have same version string but different build
-            if latest_version == current_version:
-                latest_code = firmware_info.get("version_code")
-                current_code = self._get_current_version_code()
-                
-                # If we have both codes and they're different, treat as update available
-                if latest_code is not None and current_code is not None and latest_code != current_code:
-                    # Return the version with code indicator to show it's different
-                    return f"{latest_version} (build {latest_code})"
         
+        # No update available, return current version
         return current_version
 
     @property
