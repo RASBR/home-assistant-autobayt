@@ -132,6 +132,23 @@ class AutobaytSwitchEntity(CoordinatorEntity, SwitchEntity):
         """Turn the switch off."""
         await self._async_set_switch_state(False)
 
+    def _update_local_button_state(self, state: bool) -> None:
+        """Update the button state in coordinator data."""
+        if self._device_id not in self.coordinator.data.get("device_data", {}):
+            return
+            
+        device_data = self.coordinator.data["device_data"][self._device_id]
+        buttons = device_data.get(ATTR_BUTTONS, [])
+        
+        for button in buttons:
+            if button.get(BTN_BUTTON_ID) == self._button_id:
+                button[BTN_SWITCH_STATE] = state
+                _LOGGER.debug(
+                    "Updated local state for device %s button %s to %s",
+                    self._device_id, self._button_id, state
+                )
+                break
+
     async def _async_set_switch_state(self, state: bool) -> None:
         """Set the switch state."""
         payload = {
@@ -154,7 +171,9 @@ class AutobaytSwitchEntity(CoordinatorEntity, SwitchEntity):
                         self._device_id, self._button_id, state
                     )
                     
-                    await self.coordinator.async_request_refresh()
+                    # Update local state immediately to avoid delay in UI update
+                    self._update_local_button_state(state)
+                    self.async_write_ha_state()
                     
         except aiohttp.ClientError as err:
             _LOGGER.error(
