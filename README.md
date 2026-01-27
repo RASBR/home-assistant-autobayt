@@ -27,7 +27,7 @@
 - 💡 **Smart Switch Control** - Control single, double, and triple switch devices
 - 🔍 **Automatic Device Discovery** - Devices appear automatically for easy addition
 - 📊 **Real-time Monitoring** - Connection status, signal strength, and firmware tracking
-- 🔄 **Update Status** - Monitor firmware update progress
+- 🔄 **Firmware Updates** - Monitor and install firmware updates directly from Home Assistant
 - 🏠 **Modern Home Assistant Integration** - Config flow setup, device registry, proper unique IDs
 - 🖼️ **Custom Icons & Logos** - Local fallback icons included for offline operation
 - 🔗 **Device Consolidation** - Automatically combines devices by MAC address across integrations
@@ -37,15 +37,23 @@
 
 ### SW100HV1 - Smart Switch Single
 Single button smart switch with WiFi connectivity.
+- **SW** = Switch
+- **100** = Single button
+- **H** = Feature variant
+- **V1** = Version 1
 
 ### SW100PMV1 - Smart Switch Single with Power Monitoring
 Single button smart switch with power monitoring capabilities.
+- **PM** = Power Monitoring (future support in Phase 3)
 
 ### SW200LV1 - Smart Switch Double
 Dual button smart switch for controlling two separate circuits.
+- **200** = Two buttons
+- **L** = Feature variant
 
 ### SW300LV1 - Smart Switch Triple
 Triple button smart switch for controlling three separate circuits.
+- **300** = Three buttons
 
 ## 📊 Entity Details
 
@@ -61,11 +69,39 @@ For each device, the integration creates:
 ### Sensors
 - **Connection Status** (`sensor.{name}_connection`) - Shows connected/disconnected state
   - Additional attributes: is_hub, slave_id, room_name
+  - Entity Category: Diagnostic
 - **Signal Strength** (`sensor.{name}_signal_strength`) - WiFi signal strength in dBm
+  - Entity Category: Diagnostic
 - **Firmware Version** (`sensor.{name}_firmware`) - Current firmware version
   - Additional attributes: next_version, next_file, version_code
+  - Entity Category: Configuration
 - **Update Status** (`sensor.{name}_update_status`) - Shows idle/updating state
   - Additional attributes: update_percentage
+  - Entity Category: Configuration
+
+### Binary Sensors
+- **Firmware Update** (`binary_sensor.{name}_firmware_update`) - Indicates if firmware update is available
+  - Additional attributes: current_version, available_version, firmware_file, version_code, requires_app_update
+  - Entity Category: Configuration
+  - Device Class: Update
+
+### Update Entities
+- **Device Update** (`update.{name}`) - Firmware update management
+  - Shows current and latest firmware versions
+  - Install firmware updates directly from Home Assistant
+  - Entity Feature: Install updates
+
+### Binary Sensors
+- **Firmware Update** (`binary_sensor.{name}_firmware_update`) - Indicates if firmware update is available
+  - Additional attributes: current_version, available_version, firmware_file, version_code, requires_app_update
+  - Entity Category: Configuration
+  - Device Class: Update
+
+### Update Entities
+- **Device Update** (`update.{name}`) - Firmware update management
+  - Shows current and latest firmware versions
+  - Install firmware updates directly from Home Assistant
+  - Entity Feature: Install updates
 
 ## 🚀 Installation
 
@@ -86,19 +122,19 @@ config/
       manifest.json
       config_flow.py
       coordinator.py
+      binary_sensor.py
       sensor.py
       switch.py
+      update.py
       const.py
       device.py
-      http.py
       icons.json
       strings.json
       icon.png
       logo.png
-      brands/
-        autobayt/
-          icon.png
-          logo.png
+      static/
+        icon.png
+        logo.png
       translations/
         en.json
 ```
@@ -279,6 +315,10 @@ For issues, questions, or feature requests:
 - Switch control for all button types
 - Connection and status monitoring
 - Firmware tracking
+- Firmware update detection and installation
+- Binary sensor for update availability
+- Hub and slave device support
+- Entity categorization (Controls, Configuration, Diagnostic)
 
 ### Phase 3 (Future)
 - Power Monitoring Sensors
